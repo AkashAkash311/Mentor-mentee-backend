@@ -1,28 +1,25 @@
-import express, { Request, Response } from "express";
-import dotenv from "dotenv";
-import cors from "cors";
+import express from "express";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+import authRoutes from "./routes/auth.routes";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Test route
-app.get("/", (_req: Request, res: Response) => {
-  res.send("Mentor-Mentee Backend is running");
-});
+// Routes
+app.use("/api/auth", authRoutes);
 
-// Connect MongoDB
-mongoose.connect(process.env.MONGO_URI || "")
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB Error:", err));
-
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server listening on http://localhost:${PORT}`);
-});
+mongoose
+  .connect(process.env.MONGO_URI || "")
+  .then(() => {
+    console.log("✅ MongoDB connected");
+    app.listen(PORT, () =>
+      console.log(`🚀 Server running at http://localhost:${PORT}`)
+    );
+  })
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
