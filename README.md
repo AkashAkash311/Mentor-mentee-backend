@@ -27,15 +27,21 @@ git clone https://github.com/your-username/mentor-mentee-backend.git
 ```
 
 
-## Install dependencies
+## 2. Install dependencies
+```bash
 yarn
+```
 
 
-## Configure environment
+## 3. Configure environment
+```bash
 PORT=3000
 MONGO_URI=mongodb://localhost:27017/mentor-mentee
 JWT_SECRET=your_jwt_secret
+```
 
 
-## Start development server
+## 4. Start development server
+```bash
 yarn dev
+```
