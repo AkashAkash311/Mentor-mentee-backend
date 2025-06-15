@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: mentor-mentee-backend
+    env: node
+    buildCommand: yarn install
+    startCommand: yarn build && yarn start
+    envVars:
+      - key: NODE_ENV
+        value: production
