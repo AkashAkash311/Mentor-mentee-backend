@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes";
+import onboardingRoutes from "./routes/onboarding.routes"
 
 dotenv.config();
 
@@ -12,8 +13,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use("/api/auth", authRoutes);
+app.use("/v1/api/auth", authRoutes);
+app.use("/v1/api/onboarding", onboardingRoutes)
 
+//Connection
 mongoose
   .connect(process.env.MONGO_URI || "")
   .then(() => {
