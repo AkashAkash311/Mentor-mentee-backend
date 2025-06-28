@@ -62,3 +62,29 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ msg: "Internal server error." });
   }
 };
+
+export const updatePassword = async (req: Request, res: Response) => {
+  try {
+    const { email, newPassword, confirmNewPassword } = req.body;
+
+    if (!email || !newPassword || !confirmNewPassword)
+      return res.status(400).json({ msg: "Email and password required." });
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(401).json({ msg: "Invalid credentials." });
+
+    if(newPassword !== confirmNewPassword) 
+      return res.status(400).json({ msg: "New Password and Confirm Password doesn't match !"});
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ msg: "Password updated successfully!" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Internal server error." });
+  }
+}
