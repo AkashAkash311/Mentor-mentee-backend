@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { register, login } from "../controllers/auth.controller";
+import { register, login, updatePassword } from "../controllers/auth.controller";
 
 const router = Router();
 
@@ -11,5 +11,6 @@ function asyncHandler(fn: (req: Request, res: Response, next: NextFunction) => P
 
 router.post("/register", asyncHandler(register));
 router.post("/login", asyncHandler(login));
+router.post("/updatePassword", asyncHandler(updatePassword));
 
 export default router;

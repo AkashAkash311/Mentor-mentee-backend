@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User from "../models/user.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { getNextSequence } from "../utils/getNextSequence";
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -20,8 +21,10 @@ export const register = async (req: Request, res: Response) => {
       return res.status(409).json({ msg: "This User Name is Already taken !" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const userId = await getNextSequence("userId");
 
     const user = new User({
+      userId,
       firstName,
       lastName,
       email,
