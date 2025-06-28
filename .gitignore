@@ -33,3 +33,5 @@ coverage/
 
 # OS generated files
 Thumbs.db
+
+/src/generated/prisma

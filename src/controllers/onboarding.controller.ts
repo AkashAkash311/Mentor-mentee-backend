@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/user.model";
-import useProfileSchema from "../models/profile.model";
+import userProfileSchema from "../models/profile.model";
 import { AuthenticatedRequest } from "../middleware/auth.middleware";
 
 // Gets mentor or mentee lists in the User Table
@@ -51,10 +51,10 @@ export const editOrCreateProfile = async (req: AuthenticatedRequest, res: Respon
             return res.status(400).json({ msg: "Bio must be at least 50 characters long." });
         }
 
-        // Find or create user profile in useProfileSchema
-        let profile = await useProfileSchema.findOne({ userId });
+        // Find or create user profile in userProfileSchema
+        let profile = await userProfileSchema.findOne({ userId });
         if (!profile) {
-            profile = new useProfileSchema({
+            profile = new userProfileSchema({
             userId,
             userName,
             firstName,

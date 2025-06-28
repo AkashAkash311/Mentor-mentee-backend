@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes";
 import onboardingRoutes from "./routes/onboarding.routes"
+import postRoutes from "./routes/post.rotues";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use("/v1/api/auth", authRoutes);
 app.use("/v1/api/onboarding", onboardingRoutes)
+app.use("/v1/api/posts", postRoutes);
 
 //Connection
 mongoose

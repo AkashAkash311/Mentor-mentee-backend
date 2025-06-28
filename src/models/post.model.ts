@@ -7,6 +7,7 @@ export interface IComment {
 }
 
 export interface IPost extends Document {
+  postId: number;
   user: Types.ObjectId;
   title: string;
   description: string;
@@ -18,7 +19,7 @@ export interface IPost extends Document {
 
 const CommentSchema: Schema<IComment> = new Schema(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true }, // ref is the reference to the User model
     text: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
   },
@@ -27,6 +28,7 @@ const CommentSchema: Schema<IComment> = new Schema(
 
 const PostSchema: Schema<IPost> = new Schema(
   {
+    postId: { type: Number, required: true, unique: true },
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     title: { type: String, required: true },
     description: { type: String },
@@ -37,3 +39,7 @@ const PostSchema: Schema<IPost> = new Schema(
 );
 
 export default mongoose.model<IPost>("Post", PostSchema);
+
+// Post.find()
+//   .populate("user") // author of post
+//   .populate("comments.user"); // commenter user inside each comment
