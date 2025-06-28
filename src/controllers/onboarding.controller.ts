@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/user.model";
+import useProfileSchema from "../models/profile.model";
 import { AuthenticatedRequest } from "../middleware/auth.middleware";
 
 // Gets mentor or mentee lists in the User Table
@@ -18,29 +19,83 @@ export const getMentorOrMenteeLists = async (req: AuthenticatedRequest, res: Res
 export const editOrCreateProfile = async (req: AuthenticatedRequest, res: Response) => {
     try {
         const { userId } = req.user;
-        const { name, bio, skills, interests } = req.body;
+        const {
+            userName,
+            firstName,
+            lastName,
+            bio,
+            experience,
+            availability,
+            skills,
+            interests,
+            linkedIn,
+            github,
+            menteeLimit,
+            goal,
+            photoUrl,
+            achivement
+        } = req.body;
 
-        // Validate input
-        if (!name || !bio || !skills || !interests) {
-            return res.status(400).json({ msg: "All fields are required." });
+        // Validate required fields
+        if (
+            !userName ||
+            !firstName ||
+            !bio ||
+            !experience ||
+            !github ||
+            !menteeLimit
+        ) {
+            return res.status(400).json({ msg: "Missing required fields." });
+        }
+        if (typeof bio !== "string" || bio.length < 50) {
+            return res.status(400).json({ msg: "Bio must be at least 50 characters long." });
         }
 
-        // Find or create user profile
-        let user = await User.findById(userId);
-        if (!user) {
-            user = new User({ _id: userId, name, bio, skills, interests });
+        // Find or create user profile in useProfileSchema
+        let profile = await useProfileSchema.findOne({ userId });
+        if (!profile) {
+            profile = new useProfileSchema({
+            userId,
+            userName,
+            firstName,
+            lastName,
+            bio,
+            experience,
+            availability,
+            skills,
+            interests,
+            linkedIn,
+            github,
+            menteeLimit,
+            goal,
+            photoUrl,
+            achivement
+            });
         } else {
-            user.set({
-                name,
-                bio,
-                skills,
-                interests
+            profile.set({
+            userName,
+            firstName,
+            lastName,
+            bio,
+            experience,
+            availability,
+            skills,
+            interests,
+            linkedIn,
+            github,
+            menteeLimit,
+            goal,
+            photoUrl,
+            achivement
             });
         }
 
-        await user.save();
-        return res.status(200).json({ msg: "Profile updated successfully.", user });
-    } catch (err) {
+        await profile.save();
+        return res.status(200).json({ msg: "Profile updated successfully.", profile });
+    } catch (err: any) {
+        if (err.code === 11000 && err.keyPattern && err.keyPattern.userName) {
+            return res.status(409).json({ msg: "Username already exists." });
+        }
         console.error(err);
         res.status(500).json({ msg: "Internal server error." });
     }
