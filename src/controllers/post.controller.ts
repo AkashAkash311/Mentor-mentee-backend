@@ -4,13 +4,24 @@ import Post from "../models/post.model";
 export const createPost = async (req: Request, res: Response) => {
   try {
     const { title, content, authorId } = req.body;
-
     if (!title || !content || !authorId) {
-      return res.status(400).json({ msg: "All fields are required." });
+      return res.status(400).json({ msg: "Title, content, and authorId are required." });
     }
-
-    // Here you would typically save the post to the database
-    // For now, we will just return a success message
+    // Validate authorId (should be a valid ObjectId)
+    if (!/^[0-9a-fA-F]{24}$/.test(authorId)) {
+      return res.status(400).json({ msg: "Invalid authorId format." });
+    }
+    // Create a new post
+    const newPost = new Post({
+      postId: Date.now(), // Using timestamp as a simple unique ID
+      user: authorId,
+      title,
+      description: content, // Assuming content is the description
+      likes: [],
+      comments: [],
+    });
+    await newPost.save();
+    
     res.status(201).json({ msg: "Post created successfully!", post: { title, content, authorId } });
   } catch (err) {
     console.error(err);
