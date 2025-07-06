@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes";
 import onboardingRoutes from "./routes/onboarding.routes"
 import postRoutes from "./routes/post.rotues";
+import cors from 'cors';
+
 
 dotenv.config();
 
@@ -12,6 +14,11 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://mentor-mentee-frontend-wvgo.vercel.app/'],
+  credentials: true, // If you're using cookies
+}));
 
 // Routes
 app.use("/v1/api/auth", authRoutes);
