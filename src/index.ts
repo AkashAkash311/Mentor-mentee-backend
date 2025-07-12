@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://mentor-mentee-frontend-wvgo.vercel.app/'],
+  origin: ['http://localhost:3000', 'https://mentor-mentee-frontend-wvgo.vercel.app/', 'https://mentor-mentee-backend.onrender.com'],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   allowedHeaders: "Content-Type,Authorization",
   credentials: true, // If you're using cookies
