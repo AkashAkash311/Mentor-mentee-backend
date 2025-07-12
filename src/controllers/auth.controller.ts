@@ -58,6 +58,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     return sendSuccess(
       res,
       StatusCodes.OK,
+      null,
       "User registered successfully!"
     )
   } catch (err) {
@@ -76,13 +77,33 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   try {
     const { email, password } = req.body;
     if (!email || !password)
-      return res.status(400).json({ msg: "Email and password required." });
+      // return res.status(400).json({ msg: "Email and password required." });
+      return sendSuccess(
+        res,
+        StatusCodes.BAD_REQUEST,
+        {},
+        "Email and password required."
+      )
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ msg: "Invalid credentials." });
+    if (!user) 
+      // return res.status(401).json({ msg: "Invalid credentials." });
+      return sendSuccess(
+        res,
+        StatusCodes.BAD_REQUEST,
+        {},
+        "Invalid credentials."
+      )
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ msg: "Invalid credentials." });
+    if (!isMatch) 
+      // return res.status(401).json({ msg: "Invalid credentials." });
+      return sendSuccess(
+        res,
+        StatusCodes.BAD_REQUEST,
+        {},
+        "Invalid credentials."
+      )
 
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!, {
       expiresIn: "1d",
