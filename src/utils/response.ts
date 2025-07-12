@@ -6,8 +6,8 @@ import { StatusCodes, getReasonPhrase } from "http-status-codes";
  * ----------------------------------------------------------- */
 export interface ApiResponse<T = any> {
   HTTPStatus: number;         // 200, 404, 500 …
-  message: string;            // human‑readable
-  responseObject?: T;         // optional payload
+  message: string;      
+  responseObject?: T;
 }
 
 /* -------------------------------------------------------------
