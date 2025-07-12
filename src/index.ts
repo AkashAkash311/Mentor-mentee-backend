@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth.routes";
 import onboardingRoutes from "./routes/onboarding.routes"
 import postRoutes from "./routes/post.rotues";
 import cors from 'cors';
+import { errorMiddleware } from "./utils/response";
 
 
 dotenv.config();
@@ -26,6 +27,8 @@ app.use(cors({
 app.use("/v1/api/auth", authRoutes);
 app.use("/v1/api/onboarding", onboardingRoutes)
 app.use("/v1/api/posts", postRoutes);
+
+app.use(errorMiddleware);
 
 //Connection
 mongoose
