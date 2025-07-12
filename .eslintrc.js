@@ -25,10 +25,13 @@ module.exports = {
         js: 'never',
       },
     ],
+    "no-useless-escape": "warn",
+    "no-empty-pattern": "warn",
   },
   settings: {
     'import/resolver': {
       typescript: {},
     },
   },
+  
 };
