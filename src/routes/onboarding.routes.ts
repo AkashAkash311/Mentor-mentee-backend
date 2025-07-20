@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from "express";
-import { editOrCreateProfile, getMentorOrMenteeLists } from "../controllers/onboarding.controller";
+import { editOrCreateProfile, getMentorOrMenteeLists, getProfileDetails } from "../controllers/onboarding.controller";
 import { authenticate } from "../middleware/auth.middleware";
 
 const router = Router();
@@ -12,5 +12,6 @@ function asyncHandler(fn: (req: Request, res: Response, next: NextFunction) => P
 
 router.post("/getMentorOrMenteeLists", authenticate , asyncHandler(getMentorOrMenteeLists));
 router.post("/editOrCreateProfile", authenticate, asyncHandler(editOrCreateProfile))
+router.post("/getProfileDetails", authenticate, asyncHandler(getProfileDetails))
 
 export default router;
