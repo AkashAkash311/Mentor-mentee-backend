@@ -1,41 +1,80 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
+import { Schema, model, Types } from "mongoose";
 
-export interface userProfile {
-  userId: Types.ObjectId; // Reference to User
-  userName: string;
-  firstName: string;
-  lastName: string;
-  bio: string;
-  experience: string;
-  availability: string[];
-  skills: string[];
-  interests: string[];
-  linkedIn?: string;
-  github?: string;
-  menteeLimit?: number;
-  goal?: string;
-  photoUrl?: string;
-  achivement?: string[];
-}
+const avatarOptions = [
+  "avatar1.png",
+  "avatar2.png",
+  "avatar3.png",
+  "avatar4.png",
+  "avatar5.png",
+  "avatar6.png",
+  "avatar7.png",
+  "avatar8.png",
+  "avatar9.png",
+  "avatar10.png"
+];
 
-const userProfileSchema = new Schema<userProfile>(
+const userProfileSchema = new Schema(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true, unique: true },
-    userName: { type: String, required: true, unique: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String },
-    bio: { type: String, required: true, minlength: 50 },
-    experience: { type: String, required: true },
-    availability: { type: [String] },
-    skills: { type: [String] },
-    interests: { type: [String] },
-    linkedIn: { type: String },
-    github: { type: String, required: true },
-    menteeLimit: { type: Number, required: true },
-    goal: { type: String },
-    photoUrl: { type: String, required: true },
-    achivement: { type: [String] }
-  }
+    userId: {
+      type: Number,
+      ref: "User",
+      required: true,
+      unique: true,
+    },
+
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    bio: {
+      type: String,
+      maxlength: 280,
+      default: "",
+    },
+
+    location: {
+      type: String,
+      default: "",
+    },
+
+    profession: {
+      type: String,
+      default: "",
+    },
+
+    avatar: {
+      type: String,
+      enum: avatarOptions,
+      default: "avatar1.png",
+    },
+
+    interests: [
+      {
+        type: String,
+        trim: true,
+      }
+    ],
+
+    socialLinks: {
+      linkedin: { type: String, default: "" },
+      github: { type: String, default: "" },
+      twitter: { type: String, default: "" },
+      portfolio: { type: String, default: "" },
+    },
+
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { timestamps: true }
 );
 
-export default mongoose.model<userProfile>("user_profiles", userProfileSchema);
+export const UserProfile = model("UserProfile", userProfileSchema);
