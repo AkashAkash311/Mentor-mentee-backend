@@ -4,6 +4,8 @@ import { UserProfile } from "../models/profile.model";
 import { AuthenticatedRequest } from "../middleware/auth.middleware";
 import { sendSuccess } from "../utils/response";
 import { StatusCodes } from "http-status-codes";
+import { generateEmbedding } from "../utils/embedding";
+
 
 // Gets mentor or mentee lists in the User Table
 export const getMentorOrMenteeLists = async (req: AuthenticatedRequest, res: Response) => {
@@ -40,6 +42,9 @@ export const editOrCreateProfile = async (req: AuthenticatedRequest, res: Respon
       );
     }
 
+    const fullText = `${name} ${bio} ${interests.join(" ")}`;
+    const embedding = await generateEmbedding(fullText);
+
     let profile = await UserProfile.findOne({ userId });
 
     if (!profile) {
@@ -53,6 +58,7 @@ export const editOrCreateProfile = async (req: AuthenticatedRequest, res: Respon
         avatar,
         interests,
         socialLinks,
+        embedding: Array.from(embedding)
       });
       await profile.save();
     } else {
@@ -65,6 +71,7 @@ export const editOrCreateProfile = async (req: AuthenticatedRequest, res: Respon
         avatar,
         interests,
         socialLinks,
+        embedding: Array.from(embedding),
         updatedAt: new Date(),
       });
       await profile.save();

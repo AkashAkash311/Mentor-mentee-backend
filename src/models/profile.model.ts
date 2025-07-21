@@ -64,6 +64,11 @@ const userProfileSchema = new Schema(
       portfolio: { type: String, default: "" },
     },
 
+    embedding: {
+      type: [Number],
+      default: [],
+    },
+
     createdAt: {
       type: Date,
       default: Date.now,

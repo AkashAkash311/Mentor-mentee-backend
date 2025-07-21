@@ -1,5 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { createPost } from "../controllers/post.controller";
+import { searchProfiles } from "../controllers/search.controller";
+import { authenticate } from "../middleware/auth.middleware";
 
 const router = Router();
 
@@ -10,5 +12,6 @@ function asyncHandler(fn: (req: Request, res: Response, next: NextFunction) => P
 }
 
 router.post("/createPost", asyncHandler(createPost));
+router.post("/searchProfiles", authenticate ,asyncHandler(searchProfiles))
 
 export default router;
