@@ -104,7 +104,7 @@ export const getProfileDetails = async (req: AuthenticatedRequest, res: Response
                 res,
                 StatusCodes.BAD_REQUEST,
                 {},
-                "User ID and name are required."
+                "User ID is required."
             );
         } else {
             const profile = await UserProfile.findOne({ userId })
