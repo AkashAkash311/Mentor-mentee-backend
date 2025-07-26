@@ -14,6 +14,5 @@ export async function generateEmbedding(text: string): Promise<number[]> {
   const model = await loadModel();
 
   const output = await model(text, { pooling: "mean", normalize: true });
-  console.log("grtedwefgrtrewftrefw", output);
   return output.data;
 }
