@@ -15,12 +15,13 @@ const avatarOptions = [
 
 const userProfileSchema = new Schema(
   {
-    userId: {
-      type: Number,
+    user: {
+      type: Types.ObjectId,
       ref: "User",
       required: true,
       unique: true,
     },
+
 
     name: {
       type: String,
