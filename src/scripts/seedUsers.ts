@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import {UserProfile} from "../models/profile.model";
+import { UserProfile } from "../models/profile.model";
+import User from "../models/user.model";
+import bcrypt from "bcrypt";
 import { generateEmbedding } from "../utils/embedding";
 import { getNextSequence } from "../utils/getNextSequence";
 
@@ -89,45 +91,60 @@ const getRandomItem = (arr: string[]) => arr[Math.floor(Math.random() * arr.leng
 const seedUsers = async () => {
   try {
     await mongoose.connect(MONGO_URI);
-    console.log("Connected to DB");
+    console.log("✅ Connected to DB");
 
+    await User.deleteMany({});
     await UserProfile.deleteMany({});
-    console.log("Cleared existing profiles");
-
-    const usersToInsert = [];
+    console.log("🧹 Cleared existing users and profiles");
 
     for (const category of categories) {
       for (const bio of category.bios) {
-        const name = `${getRandomItem(firstNames)} ${getRandomItem(lastNames)}`;
+        const firstName = getRandomItem(firstNames);
+        const lastName = getRandomItem(lastNames);
+        const name = `${firstName} ${lastName}`;
+        const userName = `${firstName.toLowerCase()}${lastName.toLowerCase()}${Math.floor(Math.random() * 10000)}`;
+        const email = `${userName}@example.com`;
         const profession = category.title;
         const location = "Remote";
         const interests = category.interests;
         const fullText = `${name} ${bio} ${interests.join(" ")}`;
         const embedding = await generateEmbedding(fullText);
-        
-        usersToInsert.push({
-          userId: await getNextSequence("userId"),
+        const userId = await getNextSequence("userId");
+
+        // 1. Create user
+        const user = await User.create({
+          userId,
+          userName,
+          firstName,
+          lastName,
+          email,
+          password: await bcrypt.hash("Dummy1234", 10),
+          role: Math.random() > 0.5 ? "mentor" : "mentee",
+          field: profession,
+        });
+
+        // 2. Create corresponding user profile
+        await UserProfile.create({
+          user: user._id,
           name,
           bio,
           location,
           profession,
           interests,
           socialLinks: {
-            linkedin: `https://linkedin.com/in/${name.toLowerCase().replace(" ", "")}`,
+            linkedin: `https://linkedin.com/in/${userName}`,
           },
           embedding: Array.from(embedding),
-          createdAt: new Date(),
-          updatedAt: new Date(),
         });
+
+        console.log(`👤 Created: ${name}`);
       }
     }
-    
-    console.log("fegrthgefwfgrtefgr", usersToInsert);
-    await UserProfile.insertMany(usersToInsert);
-    console.log(`✅ Inserted ${usersToInsert.length} user profiles`);
+
+    console.log("✅ Finished seeding users and profiles");
     process.exit(0);
   } catch (err) {
-    console.error("❌ Error seeding users:", err);
+    console.error("❌ Error seeding:", err);
     process.exit(1);
   }
 };
