@@ -31,3 +31,21 @@ export const createPost = async (req: Request, res: Response) => {
     res.status(500).json({ msg: "Internal server error." });
   }
 }
+
+// Get all posts list scroll pagination
+export const getPosts = async (req: Request, res: Response) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ msg: "No token provided." });
+    }
+    const { page, limit } = req.body;
+    const posts = await Post.find()
+      .skip((parseInt(page as string) - 1) * parseInt(limit as string))
+      .limit(parseInt(limit as string));
+    res.status(200).json({ posts });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Internal server error." });
+  }
+}

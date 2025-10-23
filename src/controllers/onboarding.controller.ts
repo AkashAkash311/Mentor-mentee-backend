@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import User from "../models/user.model";
 import { UserProfile } from "../models/profile.model";
 import { AuthenticatedRequest } from "../middleware/auth.middleware";
@@ -109,7 +109,7 @@ export const getProfileDetails = async (req: AuthenticatedRequest, res: Response
         } else {
             const profile = await UserProfile.findOne({ userId })
             response = {
-                userId: profile?.userId,
+                userId: profile?.user,
                 name: profile?.name,
                 bio: profile?.bio,
                 location: profile?.location,
